@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Getter
 public class ParsingState {
-    private String remainingText;
+    private final String remainingText;
     private final Optional<LocalDateTime> deadline;
     private final Optional<String> recurrenceRule;
 
