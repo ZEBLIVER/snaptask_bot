@@ -1,9 +1,14 @@
 package ru.hackathon.max.snaptask_bot.domain.service.parsing.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.hackathon.max.snaptask_bot.domain.model.ParsingState;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,14 +16,21 @@ import java.util.regex.Pattern;
 @Component
 public class RelativeTimeHandler implements DateParserHandler {
 
-    // Паттерны для относительного времени (через N минут/часов/дней)
+    private static final Logger log = LoggerFactory.getLogger(RelativeTimeHandler.class);
+
+    private static final Map<String, Integer> NUM_MAP = Map.of(
+            "один", 1, "два", 2, "три", 3, "четыре", 4, "пять", 5,
+            "шесть", 6, "семь", 7, "восемь", 8, "девять", 9, "десять", 10
+    );
+
     private static final Pattern RELATIVE_TIME_PATTERN =
-            Pattern.compile("через\\s+(\\d+)\\s+(минут|мин|час|ч|дня|дней|дн)\\w*", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
+            Pattern.compile("\\bчерез\\s+(\\d+|один|два|три|четыре|пять|шесть|семь|восемь|девять|десять)\\s+(минут|мин|час|ч|дня|дней|дн)\\w*",
+                    Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CHARACTER_CLASS);
 
     @Override
     public ParsingState handle(ParsingState state) {
         if (state.isDeadlineSet()) {
-            return state; // Если дата уже установлена, относительное время игнорируем
+            return state;
         }
 
         String text = state.getRemainingText();
@@ -26,18 +38,40 @@ public class RelativeTimeHandler implements DateParserHandler {
 
         if (matcher.find()) {
             try {
-                int amount = Integer.parseInt(matcher.group(1));
-                String unit = matcher.group(2);
-                LocalDateTime deadline = LocalDateTime.now();
+                int amount;
+                String amountStr = matcher.group(1).toLowerCase();
+                String unit = matcher.group(2).toLowerCase();
 
-                if (unit.toLowerCase().startsWith("мин")) deadline = deadline.plusMinutes(amount);
-                else if (unit.toLowerCase().startsWith("час") || unit.toLowerCase().startsWith("ч")) deadline = deadline.plusHours(amount);
-                else if (unit.toLowerCase().startsWith("дня") || unit.toLowerCase().startsWith("дн")) deadline = deadline.plusDays(amount);
-                else return state; // Неизвестная единица
+                try {
+                    amount = Integer.parseInt(amountStr);
+                } catch (NumberFormatException e) {
+                    amount = NUM_MAP.getOrDefault(amountStr, 0);
+                }
 
-                // Удаляем распознанную часть
+                if (amount == 0) {
+                    log.warn("RelativeTimeHandler: Не удалось преобразовать количество '{}' в число.", amountStr);
+                    return state;
+                }
+
+                ZoneId userZoneId = state.getUserZoneId();
+                LocalDateTime now = ZonedDateTime.now(userZoneId).toLocalDateTime().withSecond(0).withNano(0);
+
+                LocalDateTime deadline = now;
+
+                if (unit.startsWith("мин")) deadline = deadline.plusMinutes(amount);
+                else if (unit.startsWith("час") || unit.startsWith("ч")) deadline = deadline.plusHours(amount);
+                    // Проверка на "дня/дней/дн"
+                else if (unit.startsWith("дня") || unit.startsWith("дн")) deadline = deadline.plusDays(amount);
+                else {
+                    log.warn("RelativeTimeHandler: Найдена неизвестная единица времени в тексте: '{}'", unit);
+                    return state;
+                }
+
                 String foundPhrase = matcher.group(0);
-                String cleanText = text.replace(foundPhrase, "").trim();
+                String cleanText = text.replaceAll("(?i)" + Pattern.quote(foundPhrase), " ")
+                        .replaceAll("\\s+", " ").trim();
+
+                log.debug("RelativeTimeHandler нашел: '{}', дедлайн: {}", foundPhrase, deadline);
 
                 return state.update(
                         cleanText,
@@ -45,8 +79,7 @@ public class RelativeTimeHandler implements DateParserHandler {
                         state.getRecurrenceRule()
                 );
             } catch (Exception e) {
-                // Игнорируем ошибку парсинга
-                System.err.println("Ошибка парсинга относительного времени: " + e.getMessage());
+                log.error("Ошибка парсинга относительного времени в тексте: '{}'. {}", text, e.getMessage());
             }
         }
         return state;
