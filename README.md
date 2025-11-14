@@ -1,12 +1,12 @@
 # SnapTask Bot
 
-Проактивный Telegram-бот для управления задачами с интеллектуальным парсингом естественного языка.
+Max-бот для  с интеллектуальным парсингом естественного языка.
 
 ## Описание проекта
 
-SnapTask Bot - это интеллектуальный помощник для управления задачами, который автоматически парсит сообщения пользователей и создает задачи с напоминаниями. Бот поддерживает:
+SnapTask - это бот напоминаний, который автоматически парсит сообщения пользователей и создает задачи с напоминаниями. Бот поддерживает:
 
-- **Интеллектуальный парсинг** естественного языка для извлечения дат, времени и повторяющихся событий
+- **Умный парсинг** естественного языка для извлечения дат, времени и повторяющихся событий
 - **Поддержка часовых поясов** для пользователей из разных регионов
 - **Архитектура на портах** для легкого расширения функционала
 
@@ -42,73 +42,19 @@ src/main/java/ru/hackathon/max/snaptask_bot/
 - Java 21 (для локального запуска)
 - Maven 3.9+
 
-### Запуск через Docker
-
-1. **Клонирование репозитория:**
-```bash
-git clone https://github.com/ZEBLIVER/snaptask_bot.git
-cd snaptask-bot
-```
-
-2. **Сборка Docker-образа:**
-```bash
-docker build -t snaptask-bot:latest .
-```
-
-3. **Запуск контейнера:**
-```bash
-docker run -d \
-  --name snaptask-bot \
-  -p 8081:8081 \
-  -e MAX_BOT_TOKEN=your_bot_token_here \
-  -e MAX_API_URL=https://platform-api.max.ru/ \
-  snaptask-bot:latest
-```
-
-4. **Проверка работы:**
-```bash
-# Проверка логов
-docker logs snaptask-bot
-
-# Проверка здоровья приложения
-curl http://localhost:8081/actuator/health
-```
 
 ### Запуск через Docker Compose (рекомендуется)
 
-1. **Создайте файл `docker-compose.yml`:**
-```yaml
-version: '3.8'
 
-services:
-  snaptask-bot:
-    build: .
-    container_name: snaptask-bot
-    ports:
-      - "8081:8081"
-    environment:
-      - MAX_BOT_TOKEN=${MAX_BOT_TOKEN}
-      - MAX_API_URL=${MAX_API_URL:-https://platform-api.max.ru/}
-      - SPRING_PROFILES_ACTIVE=docker
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-```
-
-2. **Создайте файл `.env` с переменными окружения:**
+1. **Отредактируйте файл `.env` с переменными окружения:**
 ```bash
 MAX_BOT_TOKEN=your_actual_bot_token_here
-MAX_API_URL=https://platform-api.max.ru/
 ```
 
-3. **Запуск приложения:**
+2. **Запуск приложения:**
 ```bash
 # Сборка и запуск в фоне
-docker-compose up -d
+docker compose up -d
 
 # Просмотр логов
 docker-compose logs -f snaptask-bot
@@ -117,40 +63,15 @@ docker-compose logs -f snaptask-bot
 docker-compose down
 ```
 
-## Локальный запуск
-
-### Предварительные требования
-
-- Java 21 JDK
-- Maven 3.9+
-
-### Шаги для локального запуска
-
-1. **Установка зависимостей:**
-```bash
-mvn clean install
-```
-
-2. **Настройка переменных окружения:**
-```bash
-export MAX_BOT_TOKEN=your_bot_token_here
-export MAX_API_URL=https://platform-api.max.ru/
-```
-
-3. **Запуск приложения:**
-```bash
-mvn spring-boot:run
-```
-
-4. **Проверка работы:**
-```bash
-curl http://localhost:8081/actuator/health
-```
-
 ### Файл конфигурации
 
 Основные настройки находятся в `src/main/resources/application.properties`:
 
+
+### Получить справку 
+```
+"/start" 
+```
 
 ### Просмотр списка задач
 ```
