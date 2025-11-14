@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  snaptask-bot:
+    build: .
+    container_name: snaptask-bot
+    ports:
+      - "8081:8081"
+    environment:
+      - MAX_BOT_TOKEN=${MAX_BOT_TOKEN}
+      - MAX_API_URL=${MAX_API_URL:-https://platform-api.max.ru/}
+      - MAX_API_SEND_MESSAGE_URL=${MAX_API_SEND_MESSAGE_URL:-https://platform-api.max.ru/messages}
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8081
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - snaptask-network
+
+networks:
+  snaptask-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local

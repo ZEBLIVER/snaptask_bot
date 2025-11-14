@@ -3,7 +3,7 @@ package ru.hackathon.max.snaptask_bot.domain.service.parsing.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.hackathon.max.snaptask_bot.domain.model.ParsingState;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.ParsingState;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

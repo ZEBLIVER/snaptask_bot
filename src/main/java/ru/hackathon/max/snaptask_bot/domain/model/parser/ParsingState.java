@@ -1,12 +1,14 @@
-package ru.hackathon.max.snaptask_bot.domain.model;
+package ru.hackathon.max.snaptask_bot.domain.model.parser;
 
 import lombok.Getter;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 
 @Getter
+@Value
 public class ParsingState {
     private String remainingText;
     private final Optional<LocalDateTime> deadline;

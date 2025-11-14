@@ -1,7 +1,7 @@
 package ru.hackathon.max.snaptask_bot.domain.service.parsing.handler;
 
 import org.springframework.stereotype.Component;
-import ru.hackathon.max.snaptask_bot.domain.model.ParsingState;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.ParsingState;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;

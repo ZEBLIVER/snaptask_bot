@@ -1,0 +1,31 @@
+# SnapTask Bot - Зависимости проекта
+# Этот файл описывает все библиотеки и их версии, необходимые для запуска проекта
+
+# Основные зависимости Spring Boot
+org.springframework.boot:spring-boot-starter:3.5.7
+org.springframework.boot:spring-boot-starter-actuator:3.5.7
+org.springframework.boot:spring-boot-starter-data-jpa:3.5.7
+org.springframework.boot:spring-boot-starter-web:3.5.7
+
+# База данных
+com.h2database:h2:2.2.224
+# org.postgresql:postgresql:42.7.3  # Закомментировано - используется H2
+
+# Утилиты для разработки
+org.projectlombok:lombok:1.18.34
+org.springframework.boot:spring-boot-devtools:3.5.7
+
+# Тестирование
+org.springframework.boot:spring-boot-starter-test:3.5.7
+org.junit.jupiter:junit-jupiter:5.10.3
+org.mockito:mockito-core:5.12.0
+
+# Maven плагины (для справки)
+org.apache.maven.plugins:maven-compiler-plugin:3.13.0
+org.apache.maven.plugins:maven-surefire-plugin:3.2.5
+org.springframework.boot:spring-boot-maven-plugin:3.5.7
+
+# Требования к окружению
+# Java: 21
+# Maven: 3.9.6+
+# Docker: 20.10+

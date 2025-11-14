@@ -1,8 +1,8 @@
 package ru.hackathon.max.snaptask_bot.domain.service.parsing;
 
 import org.springframework.stereotype.Service;
-import ru.hackathon.max.snaptask_bot.domain.model.ParsedTaskDetails;
-import ru.hackathon.max.snaptask_bot.domain.model.RawParseResult;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.ParsedTaskDetails;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.RawParseResult;
 
 import java.time.ZoneId;
 import java.util.Optional;

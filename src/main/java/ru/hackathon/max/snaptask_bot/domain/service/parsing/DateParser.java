@@ -1,8 +1,8 @@
 package ru.hackathon.max.snaptask_bot.domain.service.parsing;
 
 import org.springframework.stereotype.Service;
-import ru.hackathon.max.snaptask_bot.domain.model.ParsingState;
-import ru.hackathon.max.snaptask_bot.domain.model.RawParseResult;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.ParsingState;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.RawParseResult;
 import ru.hackathon.max.snaptask_bot.domain.service.parsing.handler.*;
 
 
@@ -40,7 +40,7 @@ public class DateParser {
     }
 
     /**
-     * Определяет приоритет выполнения хэндлеров (более низкое число = более высокий приоритет).
+     * Определяет приоритет выполнения хэндлеров.
      */
     private int getExecutionOrder(DateParserHandler handler) {
         if (handler instanceof RecurrenceHandler) return 5;

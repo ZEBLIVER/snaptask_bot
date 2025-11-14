@@ -1,6 +1,6 @@
 package ru.hackathon.max.snaptask_bot.domain.service.parsing.handler;
 
-import ru.hackathon.max.snaptask_bot.domain.model.ParsingState;
+import ru.hackathon.max.snaptask_bot.domain.model.parser.ParsingState;
 
 public interface DateParserHandler {
 
