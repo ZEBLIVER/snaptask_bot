@@ -73,3 +73,44 @@ docker compose down
 "/start" 
 ```
 
+---
+
+## Локальный запуск
+
+### Настройка переменных окружения
+
+Для локального запуска добавьте в `src/main/resources/application.properties` три ключа:
+
+```properties
+MAX_API_URL=https://platform-api.max.ru/
+MAX_API_SEND_MESSAGE_URL=https://platform-api.max.ru/messages
+MAX_BOT_TOKEN=your_actual_bot_token_here
+```
+
+### Сборка и запуск
+
+```bash
+# Сборка проекта
+mvn clean package
+
+# Запуск через JAR
+java -jar target/snaptask-bot-0.0.1-SNAPSHOT.jar
+
+# Или через Maven
+mvn spring-boot:run
+```
+
+### Запуск через Docker
+
+```bash
+# Сборка образа
+docker build -t snaptask-bot .
+
+# Запуск контейнера
+docker run -p 8081:8081 \
+  -e MAX_BOT_TOKEN=your_actual_bot_token_here \
+  -e MAX_API_URL=https://platform-api.max.ru/ \
+  -e MAX_API_SEND_MESSAGE_URL=https://platform-api.max.ru/messages \
+  snaptask-bot
+```
+
