@@ -57,7 +57,7 @@ docker compose up -d --build
 docker compose ps
 
 # Просмотр логов
-docker-compose logs -f snaptask-bot
+docker compose logs -f snaptask-bot
 
 # Остановка
 docker compose down
